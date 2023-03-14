@@ -1,0 +1,84 @@
+from machine import Pin, PWM
+import time
+
+curled = 0
+led = Pin("LED", Pin.OUT)
+led3 = PWM(Pin(22))
+led2 = PWM(Pin(21))
+led1 = PWM(Pin(20))
+led3.freq(1000)
+led2.freq(1000)
+led1.freq(1000)
+
+def binary():
+    global curled
+    curled+=1
+    
+    if curled==1:
+        for duty in range(65025):
+            led1.duty_u16(duty)
+            time.sleep(0.0001)
+        for duty in range(65025, 0, -1):
+            led1.duty_u16(duty)
+            time.sleep(0.0001)
+    elif curled==2:
+        for duty in range(65025):
+            led2.duty_u16(duty)
+            time.sleep(0.0001)
+        for duty in range(65025, 0, -1):
+            led2.duty_u16(duty)
+            time.sleep(0.0001)
+    elif curled==3:
+        for duty in range(65025):
+            led1.duty_u16(duty)
+            led2.duty_u16(duty)
+            time.sleep(0.0001)
+        for duty in range(65025, 0, -1):
+            led1.duty_u16(duty)
+            led2.duty_u16(duty)
+            time.sleep(0.0001)
+    elif curled==4:
+        for duty in range(65025):
+            led3.duty_u16(duty)
+            time.sleep(0.0001)
+        for duty in range(65025, 0, -1):
+            led3.duty_u16(duty)
+            time.sleep(0.0001)
+    elif curled==5:
+        for duty in range(65025):
+            led1.duty_u16(duty)
+            led3.duty_u16(duty)
+            time.sleep(0.0001)
+        for duty in range(65025, 0, -1):
+            led1.duty_u16(duty)
+            led3.duty_u16(duty)
+            time.sleep(0.0001)
+    elif curled==6:
+        for duty in range(65025):
+            led2.duty_u16(duty)
+            led3.duty_u16(duty)
+            time.sleep(0.0001)
+        for duty in range(65025, 0, -1):
+            led2.duty_u16(duty)
+            led3.duty_u16(duty)
+            time.sleep(0.0001)
+    elif curled==7:
+        for duty in range(65025):
+            led1.duty_u16(duty)
+            led2.duty_u16(duty)
+            led3.duty_u16(duty)
+            time.sleep(0.0001)
+        for duty in range(65025, 0, -1):
+            led1.duty_u16(duty)
+            led2.duty_u16(duty)
+            led3.duty_u16(duty)
+            time.sleep(0.0001)
+    else:
+        curled=0
+
+while True:
+    binary()
+    led.value(1)
+    time.sleep(0.2)
+    led.value(0)
+    time.sleep(0.8)
