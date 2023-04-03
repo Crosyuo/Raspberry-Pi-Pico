@@ -1,0 +1,63 @@
+from machine import Pin, I2C, ADC, Timer, PWM
+import utime
+from ssd1306 import SSD1306_I2C
+import micropython
+from led import Led
+import time
+
+i2c = I2C(1, sda= Pin(14), scl = Pin(15), freq = 400000)
+oled = SSD1306_I2C(128, 64, i2c)
+
+button2 = Pin(9, mode = Pin.IN, pull = Pin.PULL_UP)
+button1 = Pin(8, mode = Pin.IN, pull = Pin.PULL_UP)
+button0 = Pin(7, mode = Pin.IN, pull = Pin.PULL_UP)
+
+def interupt(pin):
+    led1.value(0)
+    led2.value(0)
+    led3.value(0)
+
+rotta = Pin(12, mode = Pin.IN, pull = Pin.PULL_UP)
+rotta.irq(handler = interupt, trigger = Pin.IRQ_FALLING)
+
+led1 = Led(20)
+led2 = Led(21)
+led3 = Led(22)
+
+def updateScren():
+    oled.fill(0)
+    oled.text("																	", 0, 0, 1)
+    oled.text("																	", 0, 55, 1)
+    oled.text("	Btn 0 value[" + str(led1.value())+"]	", 0, 10, 1)
+    oled.text("	Btn 1 value[" + str(led2.value())+"]	", 0, 20, 1)
+    oled.text("	Btn 2 value[" + str(led3.value())+"]	", 0, 30, 1)
+    oled.text("	", 0, 40, 1)
+    oled.text("	", 120, 40, 1)
+    oled.text("	  LED-VALUES", 0, 45, 1)
+    oled.text("	", 120, 45, 1)
+    oled.show()
+
+
+
+while True:
+    if button0.value() == 0:
+        led1.toggle()
+        while True:
+            updateScren()
+            if button0.value() == 1:
+                break
+    if button1.value() == 0:
+        led2.toggle()
+        while True:
+            updateScren()
+            if button1.value() == 1:
+                break
+    if button2.value() == 0:
+        led3.toggle()
+        while True:
+            updateScren()
+            if button2.value() == 1:
+                break
+        
+    updateScren()
+    time.sleep(0.1)
